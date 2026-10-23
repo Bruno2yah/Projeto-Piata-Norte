@@ -1,0 +1,144 @@
+<main class="main-area" id="orcamento">
+  <header class="topbar">
+    <div class="topbar-path">Sistema de orçamentos / Editando</div>
+    <div class="user-info">
+      <span class="avatar">MA</span>
+      <span class="user-name">Mariano Alves da Silva</span>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <a class="back-link" href="#orcamentos"><span aria-hidden="true">‹</span> Todos os orçamentos</a>
+
+    <div class="page-heading">
+      <div class="eyebrow">EDITANDO · 18/10/2024</div>
+      <div class="title-line">
+        <h1>Orçamento PN-2026-014</h1>
+        <span class="status"><i aria-hidden="true"></i>Em produção</span>
+      </div>
+      <p class="page-subtitle">Cozinha e sala - Apê Horizonte</p>
+    </div>
+
+    <form class="budget-form">
+      <section class="card client-card" aria-labelledby="client-heading">
+        <h2 id="client-heading">Quem é o cliente?</h2>
+        <div class="client-grid">
+          <label class="field">
+            <span>Cliente</span>
+            <input type="text" value="Ana Martins" aria-label="Cliente">
+          </label>
+          <label class="field">
+            <span>Arquiteto</span>
+            <input type="text" value="Beatriz Costa" aria-label="Arquiteto">
+          </label>
+          <label class="field project-field">
+            <span>Projeto</span>
+            <input type="text" value="Cozinha e sala - Apê Horizonte" aria-label="Projeto">
+          </label>
+        </div>
+      </section>
+
+      <section class="card furniture-card" aria-labelledby="furniture-heading">
+        <div class="section-head">
+          <h2 id="furniture-heading">Móveis e custos</h2>
+          <p>2 módulos · 1200 mm livres no total. Informe as medidas de cada móvel.</p>
+        </div>
+
+        <article class="furniture-item" aria-label="Móvel 1">
+          <div class="item-heading"><strong>MÓVEL 1</strong><span>Quantidade: 1</span></div>
+          <label class="field item-name">
+            <span>Nome do item</span>
+            <input type="text" value="Armário inferior - cozinha">
+          </label>
+          <label class="field item-description">
+            <span>Descrição</span>
+            <textarea rows="2">Base inferior para cozinha com acabamento em MDF amadeirado.</textarea>
+          </label>
+          <div class="measure-group">
+            <h3>Medidas (em metros)</h3>
+            <div class="three-column-grid">
+              <label class="field"><span>Comprimento (m)</span><input type="text" value="3,00"></label>
+              <label class="field"><span>Altura (m)</span><input type="text" value="0,90"></label>
+              <label class="field"><span>Profundidade (m)</span><input type="text" value="0,60"></label>
+            </div>
+          </div>
+          <div class="cost-group">
+            <h3>Custos</h3>
+            <div class="three-column-grid">
+              <label class="field"><span>Valor da madeira</span><input type="text" value="R$ 2.700,00"></label>
+              <label class="field"><span>Insumos (total)</span><input type="text" value="R$ 520,00"></label>
+              <label class="field"><span>Mão de obra</span><input type="text" value="R$ 1.000,00"></label>
+            </div>
+          </div>
+          <div class="subtotal"><span>Subtotal do móvel</span><strong>R$ 4.220,00</strong></div>
+        </article>
+
+        <article class="furniture-item" aria-label="Móvel 2">
+          <div class="item-heading"><strong>MÓVEL 2</strong><span>Quantidade: 1</span></div>
+          <label class="field item-name">
+            <span>Nome do item</span>
+            <input type="text" value="Painel com rack - sala">
+          </label>
+          <label class="field item-description">
+            <span>Descrição</span>
+            <textarea rows="2">Painel vertical com rack para sala com acabamento em MDF amadeirado.</textarea>
+          </label>
+          <div class="measure-group">
+            <h3>Medidas (em metros)</h3>
+            <div class="three-column-grid">
+              <label class="field"><span>Comprimento (m)</span><input type="text" value="2,00"></label>
+              <label class="field"><span>Altura (m)</span><input type="text" value="2,40"></label>
+              <label class="field"><span>Profundidade (m)</span><input type="text" value="0,35"></label>
+            </div>
+          </div>
+          <div class="cost-group">
+            <h3>Custos</h3>
+            <div class="three-column-grid">
+              <label class="field"><span>Valor da madeira</span><input type="text" value="R$ 1.800,00"></label>
+              <label class="field"><span>Insumos (total)</span><input type="text" value="R$ 280,00"></label>
+              <label class="field"><span>Mão de obra</span><input type="text" value="R$ 700,00"></label>
+            </div>
+          </div>
+          <div class="subtotal"><span>Subtotal do móvel</span><strong>R$ 2.780,00</strong></div>
+        </article>
+
+        <button class="add-item-button" type="button"><span aria-hidden="true">＋</span> Adicionar móvel</button>
+      </section>
+
+      <section class="card payment-card" aria-labelledby="payment-heading">
+        <h2 id="payment-heading">Pagamento e prazo</h2>
+        <div class="payment-grid">
+          <label class="field">
+            <span>Pagamento</span>
+            <input type="text" value="50% na aprovação e 50% na entrega e instalação.">
+          </label>
+          <label class="field">
+            <span>Prazo de execução</span>
+            <input type="text" value="35 dias úteis">
+          </label>
+        </div>
+        <p class="payment-note">Entrada: R$ 3.500,00 · saldo: R$ 3.500,00.</p>
+        <p class="payment-note">O prazo de execução é contado após confirmação das medidas.</p>
+        <p class="payment-note">O escopo inclui fabricação e instalação dos móveis. Não inclui eletrodomésticos ou obras civis.</p>
+      </section>
+
+      <section class="price-summary" aria-label="Resumo do orçamento">
+        <div class="price-total">
+          <span class="summary-label">PREÇO ATUALIZADO</span>
+          <strong>R$ 7.000,00</strong>
+          <small>Sem margem ou taxa adicional neste orçamento.</small>
+        </div>
+        <div class="price-breakdown">
+          <div><span>Armário inferior - cozinha</span><strong>R$ 4.220,00</strong></div>
+          <div><span>Painel com rack - sala</span><strong>R$ 2.780,00</strong></div>
+        </div>
+        <div class="summary-actions">
+          <button class="save-button" type="button">Salvar orçamento</button>
+          <button class="preview-button" type="button">Visualizar orçamento <span aria-hidden="true">›</span></button>
+        </div>
+      </section>
+    </form>
+
+    <footer class="page-footer">Prévia v01 · Valores em reais · Medidas em metros.</footer>
+  </div>
+</main>
