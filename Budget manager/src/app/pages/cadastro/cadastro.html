@@ -1,1 +1,81 @@
-<p>cadastro works!</p>
+<div class="pagina-auth pagina-cadastro">
+  <aside class="painel-imagem" aria-label="Imagem da Marcenaria Piata Norte">
+    <img src="/assets/imagem-cadastro.jpg" alt="" class="imagem-painel">
+  </aside>
+
+  <main class="area-formulario">
+    <div class="caixa-formulario">
+      <a class="link-voltar-site" routerLink="/">← Voltar ao site</a>
+
+      <div class="titulo-formulario">
+        <h1>Criar minha conta</h1>
+      </div>
+
+      <form class="formulario" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="linha-dois-campos">
+          <div class="campo">
+            <label class="campo-rotulo" for="cadastro-nome">Nome</label>
+            <input class="campo-entrada" id="cadastro-nome" type="text" formControlName="nome" placeholder="Seu primeiro nome" autocomplete="given-name">
+            @if (form.controls.nome.touched && form.controls.nome.hasError('required')) {
+              <small class="erro">Informe seu nome.</small>
+            }
+          </div>
+          <div class="campo">
+            <label class="campo-rotulo" for="cadastro-sobrenome">Sobrenome</label>
+            <input class="campo-entrada" id="cadastro-sobrenome" type="text" formControlName="sobrenome" placeholder="Sobrenome" autocomplete="family-name">
+            @if (form.controls.sobrenome.touched && form.controls.sobrenome.hasError('required')) {
+              <small class="erro">Informe seu sobrenome.</small>
+            }
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="campo-rotulo" for="cadastro-email">E-mail</label>
+          <input class="campo-entrada" id="cadastro-email" type="email" formControlName="email" placeholder="seu@email.com" autocomplete="email">
+          @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+            <small class="erro">Informe seu e-mail.</small>
+          } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
+            <small class="erro">Informe um endereço de e-mail válido.</small>
+          }
+        </div>
+
+        <div class="linha-dois-campos">
+          <div class="campo">
+            <label class="campo-rotulo" for="cadastro-senha">Crie uma senha</label>
+            <input class="campo-entrada" id="cadastro-senha" type="password" formControlName="senha" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+            @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
+              <small class="erro">Crie uma senha.</small>
+            } @else if (form.controls.senha.touched && form.controls.senha.hasError('minlength')) {
+              <small class="erro">A senha precisa ter pelo menos 8 caracteres.</small>
+            }
+          </div>
+          <div class="campo">
+            <label class="campo-rotulo" for="cadastro-confirmar-senha">Confirme a senha</label>
+            <input class="campo-entrada" id="cadastro-confirmar-senha" type="password" formControlName="confirmarSenha" placeholder="Repita sua senha" autocomplete="new-password">
+            @if (form.controls.confirmarSenha.touched && form.controls.confirmarSenha.hasError('required')) {
+              <small class="erro">Confirme sua senha.</small>
+            } @else if (form.controls.confirmarSenha.touched && form.controls.confirmarSenha.hasError('minlength')) {
+              <small class="erro">Use pelo menos 8 caracteres.</small>
+            } @else if (form.controls.confirmarSenha.touched && form.hasError('senhasDiferentes')) {
+              <small class="erro">As senhas não são iguais.</small>
+            }
+          </div>
+        </div>
+
+        <label class="caixa-termos" for="aceitar-termos">
+          <input type="checkbox" id="aceitar-termos" formControlName="aceitarTermos">
+          <span>Li e aceito os <a href="#termos-de-uso" (click)="$event.preventDefault()">Termos de uso</a> e a <a href="#politica-de-privacidade" (click)="$event.preventDefault()">Política de privacidade</a></span>
+        </label>
+        @if (form.controls.aceitarTermos.touched && form.controls.aceitarTermos.hasError('required')) {
+          <small class="erro">É necessário aceitar os termos para continuar.</small>
+        }
+
+        <button class="botao botao-vermelho botao-grande botao-largura-total" type="submit">Criar minha conta grátis</button>
+        @if (mensagem) {
+          <p class="mensagem" role="status">{{ mensagem }}</p>
+        }
+        <p class="chamada">Já tem uma conta? <a routerLink="/login">Entrar</a></p>
+      </form>
+    </div>
+  </main>
+</div>
