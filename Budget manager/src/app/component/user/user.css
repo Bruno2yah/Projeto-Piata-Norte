@@ -1,0 +1,104 @@
+/* ==========================================================
+   Menu do usuário - "Sua conta"
+   CSS de componente Angular: variáveis em :host
+   ========================================================== */
+
+:host {
+  --red: #AD1F23;
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray: #F4F6F9;
+
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+
+  display: inline-block;
+  width: 360px;
+  max-width: 100%;
+  font-family: var(--font-sans);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---------- Cartão ---------- */
+.account {
+  background: var(--white);
+  border: 1px solid #e8eaee;
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* ---------- Cabeçalho ---------- */
+.account__header {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid #e8eaee;
+}
+.account__header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  color: #111111;
+}
+.account__header p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #666b73;
+}
+
+/* ---------- Dados ---------- */
+.account__data {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  padding: 20px 24px 19px;
+}
+.field dt {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6b7078;
+}
+.field dd {
+  margin-top: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #111111;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Rodapé / botão ---------- */
+.account__footer {
+  padding: 12px;
+  border-top: 1px solid #e8eaee;
+}
+.logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(173, 31, 35, 0.1);
+  color: var(--red);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.logout:hover { background: rgba(173, 31, 35, 0.17); }
+.logout:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+.logout svg { flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .logout { transition: none; }
+}

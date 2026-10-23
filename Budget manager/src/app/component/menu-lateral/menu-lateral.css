@@ -24,7 +24,7 @@
 /* Para uma imagem que representa apenas o símbolo da empresa */
 .logo {
   display: block;
-  width: 27px;
+  width: 50px;
   max-width: 100%;
   height: auto;
   object-fit: contain;
