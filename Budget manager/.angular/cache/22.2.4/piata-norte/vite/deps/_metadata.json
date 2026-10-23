@@ -1,0 +1,46 @@
+{
+  "hash": "affac6d1",
+  "configHash": "e6387e3d",
+  "lockfileHash": "b26bc301",
+  "browserHash": "882e1461",
+  "optimized": {
+    "@angular/core": {
+      "src": "../../../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "f85e7a78",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "ad4463a4",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "834e4555",
+      "needsInterop": false
+    },
+    "rxjs/operators": {
+      "src": "../../../../../../../../node_modules/rxjs/dist/esm5/operators/index.js",
+      "file": "rxjs_operators.js",
+      "fileHash": "d3a47d58",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "core-BLgaVx0p": {
+      "file": "core-BLgaVx0p.js",
+      "isDynamicEntry": false
+    },
+    "operators-CIjENk48": {
+      "file": "operators-CIjENk48.js",
+      "isDynamicEntry": false
+    },
+    "platform-browser-B8XsOiIA": {
+      "file": "platform-browser-B8XsOiIA.js",
+      "isDynamicEntry": false
+    }
+  }
+}
