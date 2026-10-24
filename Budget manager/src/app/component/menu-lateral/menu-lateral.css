@@ -1,12 +1,10 @@
 :host {
   display: block;
   flex: 0 0 var(--sidebar-width);
-  width: var(--sidebar-width);
   min-height: 100vh;
 }
 
 .sidebar {
-  width: 100%;
   min-height: 100%;
   padding: 14px 12px;
   background: #050505;

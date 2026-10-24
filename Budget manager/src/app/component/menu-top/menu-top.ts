@@ -1,7 +1,8 @@
 import { Component, Input } from "@angular/core";
+import { User } from "../user/user";
 
 @Component({
-  imports: [],
+  imports: [User],
   selector: "app-menu-top",
   styleUrl: "./menu-top.css",
   templateUrl: "./menu-top.html",
