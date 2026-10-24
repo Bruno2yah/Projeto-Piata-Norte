@@ -1,1 +1,109 @@
-<p>dashboard works!</p>
+<div class="page-container">
+    <!-- Topo -->
+    <app-menu-top paginaAtual="Orçamentos"></app-menu-top>
+
+    <!-- Secção Principal de Boas-Vindas -->
+    <section class="hero">
+        <div class="hero__text">
+            <h1>Oi, Mariano! Como estão os<br>orçamentos hoje?</h1>
+            <p>Da proposta à entrega: acompanhe o trabalho da marcenaria.</p>
+        </div>
+        <button class="btn-novo" type="button" routerLink="/orcamento">
+            <span>+</span> Novo orçamento
+        </button>
+    </section>
+
+    <!-- Cartões de Resumo (KPIs) -->
+    <section class="summary-grid">
+        <app-card-summary label="Orçamentos" [number]=5 sub="Neste Periodo"></app-card-summary>
+        <app-card-summary label="Em produção" [number]=3 sub="Mão na massa" class="summary-card--progress"></app-card-summary>
+        <app-card-summary label="Orçamentos" [number]=2 sub="Entregues e instalados"></app-card-summary>
+    </section>
+
+    <!-- Barra de Filtros e Pesquisa -->
+    <section class="toolbar">
+        <div class="filter-pills">
+            <button type="button" class="pill">Todos </button>
+            <button type="button" class="pill">Em produção</button>
+            <button type="button" class="pill">Finalizados</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Buscar cliente, arquiteto ou projeto"/>
+            <button class="search-btn" type="button" aria-label="Pesquisar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- Cabeçalho da Tabela -->
+    <div class="table-header">
+        <span>PROJETO</span>
+        <span>CLIENTE</span>
+        <span>ARQUITETO</span>
+        <span>DATA</span>
+        <span>STATUS</span>
+        <span>NOME DO EDITOR</span>
+        <span>AÇÕES</span>
+    </div>
+
+    <!-- Lista de Orçamentos -->
+    <div class="budget-list">
+        @for (item of listaOrcamentos; track item.codigo) {
+        <div class="budget-row">
+            <!-- Coluna: Projeto -->
+            <div class="col-projeto">
+                <strong class="projeto-title">{{ item.titulo }}</strong>
+                <span class="projeto-code">
+                    {{ item.codigo }}@if (item.subtitulo) { · {{ item.subtitulo }} }
+                </span>
+            </div>
+
+            <!-- Coluna: Cliente -->
+            <div class="col-text">{{ item.cliente }}</div>
+
+            <!-- Coluna: Arquiteto -->
+            <div class="col-text">{{ item.arquiteto }}</div>
+
+            <!-- Coluna: Data -->
+            <div class="col-text">{{ item.data }}</div>
+
+            <!-- Coluna: Status -->
+            <div>
+                @if (item.status === 'Em produção') {
+                <span class="badge badge--producao">• Em produção</span>
+                } @else {
+                <span class="badge badge--finalizado">✓ Finalizado</span>
+                }
+            </div>
+
+            <!-- Coluna: Nome do Editor -->
+            <div class="col-editor">{{ item.editor }}</div>
+
+            <!-- Coluna: Ações -->
+            <div class="col-acoes">
+                <button type="button" class="btn-visualizar" routerLink="/preview">Visualizar</button>
+                <a href="javascript:void(0)" class="action-link">Editar</a>
+                <a href="javascript:void(0)" class="action-link">Duplicar</a>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Rodapé e Paginação -->
+    <footer class="table-footer">
+        <p class="footer-info">
+            Mostrando 5 de 5 orçamentos · mais recentes primeiro
+        </p>
+
+        <div class="pagination">
+            <button type="button" class="page-btn">← Anterior</button>
+            <span class="page-number">1</span>
+            <button type="button" class="page-btn">Próxima →</button>
+        </div>
+    </footer>
+</div>

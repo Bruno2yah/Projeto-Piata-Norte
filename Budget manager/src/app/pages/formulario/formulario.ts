@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { MenuTop } from '../../component/menu-top/menu-top';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [MenuTop, RouterLink],
   selector: 'app-formulario',
   standalone: true,
   styleUrl: './formulario.css',

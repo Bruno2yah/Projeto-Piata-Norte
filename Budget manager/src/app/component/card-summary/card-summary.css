@@ -1,0 +1,36 @@
+/* Cartões de Resumo */
+.summary-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-card__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #222;
+  text-transform: uppercase;
+}
+
+.summary-card__number {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #141414;
+}
+
+.summary-card__sub {
+  font-size: 13px;
+  color: #777;
+}
+
+.summary-card--progress .summary-card__label,
+.summary-card--progress .summary-card__number,
+.summary-card--progress .summary-card__sub {
+  color: #a81c1c;
+}
