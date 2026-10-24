@@ -1,54 +1,87 @@
 <div class="pagina-auth pagina-login">
+
   <aside class="painel-imagem" aria-label="Imagem da Marcenaria Piata Norte">
-    <img src="/assets/imagem-login.jpg" alt="" class="imagem-painel">
+    <img
+      src="/assets/imagem-login.jpg"
+      alt=""
+      class="imagem-painel">
   </aside>
 
   <main class="area-formulario">
     <div class="caixa-formulario">
-      <a class="link-voltar-site" routerLink="/">← Voltar ao site</a>
+
+      <a class="link-voltar-site" href="/">
+        ← Voltar ao site
+      </a>
 
       <div class="titulo-formulario">
         <h1>Bem-vindo de volta!</h1>
         <p>Entre com seus dados para acessar sua conta.</p>
       </div>
 
-      <form class="formulario" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <form class="formulario">
+
         <div class="campo">
-          <label class="campo-rotulo" for="login-email">E-mail</label>
-          <input class="campo-entrada" id="login-email" type="email" formControlName="email"
-                 placeholder="seu@email.com" autocomplete="email" [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched">
-          @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-            <small class="erro">Informe seu e-mail.</small>
-          } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
-            <small class="erro">Informe um endereço de e-mail válido.</small>
-          }
+          <label class="campo-rotulo" for="login-email">
+            E-mail
+          </label>
+
+          <input
+            class="campo-entrada"
+            id="login-email"
+            type="email"
+            placeholder="seu@email.com"
+            autocomplete="email">
         </div>
 
         <div class="campo">
+
           <div class="campo-rotulo-linha">
-            <label class="campo-rotulo" for="login-senha">Senha</label>
-            <button class="link-esqueci-senha" type="button" (click)="recuperarSenha()">Esqueci minha senha</button>
-          </div>
-          <div class="campo-com-botao">
-            <input class="campo-entrada" id="login-senha" [type]="mostrarSenha ? 'text' : 'password'"
-                   formControlName="senha" placeholder="••••••••" autocomplete="current-password"
-                   [attr.aria-invalid]="form.controls.senha.invalid && form.controls.senha.touched">
-            <button class="botao-mostrar-senha" type="button" (click)="mostrarSenha = !mostrarSenha"
-                    aria-controls="login-senha" [attr.aria-pressed]="mostrarSenha">
-              {{ mostrarSenha ? 'Ocultar' : 'Mostrar' }}
+            <label class="campo-rotulo" for="login-senha">
+              Senha
+            </label>
+
+            <button
+              class="link-esqueci-senha"
+              type="button">
+              Esqueci minha senha
             </button>
           </div>
-          @if (form.controls.senha.touched && form.controls.senha.hasError('required')) {
-            <small class="erro">Informe sua senha.</small>
-          }
+
+          <div class="campo-com-botao">
+
+            <input
+              class="campo-entrada"
+              id="login-senha"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password">
+
+            <button
+              class="botao-mostrar-senha"
+              type="button"
+              aria-controls="login-senha">
+              Mostrar
+            </button>
+
+          </div>
+
         </div>
 
-        <button class="botao botao-vermelho botao-grande botao-largura-total" type="submit">Entrar na minha conta</button>
-        @if (mensagem) {
-          <p class="mensagem" role="status">{{ mensagem }}</p>
-        }
-        <p class="chamada">Não tem conta? <a routerLink="/cadastro">Cadastre-se grátis</a></p>
+        <button
+          class="botao botao-vermelho botao-grande botao-largura-total"
+          type="button">
+          Entrar na minha conta
+        </button>
+
+        <p class="chamada">
+          Não tem conta?
+          <a href="/cadastro">Cadastre-se grátis</a>
+        </p>
+
       </form>
+
     </div>
   </main>
+
 </div>
