@@ -1,203 +1,187 @@
 :host {
+  --red: #AD1F23;
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray: #F4F6F9;
+
+  --font-title: "Montserrat", "Segoe UI", Arial, sans-serif;
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+
   display: block;
+  width: 100%;
   min-height: 100vh;
-}
-
-.pagina-auth {
-  --vermelho: #ad1f23;
-  --tinta: #111111;
-  --fundo-claro: #f4f6f9;
-  --branco: #ffffff;
-  --linha: #dbdbdb;
-  --texto-suave: #545454;
-  --placeholder: #8c8c8c;
-  --fonte-titulo: "Manrope", system-ui, sans-serif;
-  --fonte-texto: "Inter", system-ui, sans-serif;
-
-  box-sizing: border-box;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 600px minmax(0, 1fr);
-  font: 16px var(--fonte-texto);
-  color: var(--tinta);
-  background: var(--fundo-claro);
+  background: var(--gray);
+  color: var(--black);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-.pagina-auth *,
-.pagina-auth *::before,
-.pagina-auth *::after {
-  box-sizing: border-box;
-}
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.pagina-auth h1,
-.pagina-auth p {
-  margin: 0;
-}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
 
-.pagina-auth a {
-  color: inherit;
-  text-decoration: none;
-}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 
-.painel-imagem {
-  min-width: 0;
+/* ---------- Layout ---------- */
+.login {
+  display: grid;
+  grid-template-columns: 5fr 7fr;      /* 600px / 840px em 1440px */
   min-height: 100vh;
-  overflow: hidden;
-  background: #141414;
 }
 
-.imagem-painel {
-  display: block;
+.login__image { position: relative; min-height: 100%; background: #e4e8f0; }
+.login__image img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   object-fit: cover;
 }
 
-.area-formulario {
+.login__panel {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
-  padding: 40px;
-  background: var(--fundo-claro);
+  padding: 48px 24px;
+  background: var(--gray);
 }
 
-.caixa-formulario {
-  width: 100%;
-  max-width: 440px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
+.login__box { width: 100%; max-width: 440px; }
 
-.link-voltar-site {
+/* ---------- Voltar ---------- */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
   font-weight: 600;
-  align-self: flex-start;
+  line-height: 20px;
+  color: var(--black);
 }
+.back:hover { text-decoration: underline; text-underline-offset: 4px; }
 
-.titulo-formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.titulo-formulario h1 {
-  font-family: var(--fonte-titulo);
-  font-weight: 700;
-  font-size: 34px;
-  line-height: 1.12;
-}
-
-.titulo-formulario p {
-  font-size: 15px;
-  color: var(--texto-suave);
-}
-
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.campo-rotulo {
-  font-size: 13px;
+/* ---------- Títulos ---------- */
+h1 {
+  margin-top: 20px;
+  font-family: var(--font-title);
+  font-size: 36px;
   font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #111111;
+}
+.login__sub {
+  font-size: 15px;
+  line-height: 22px;
+  color: #555a62;
 }
 
-.campo-rotulo-linha {
+/* ---------- Formulário ---------- */
+.form { margin-top: 19px; }
+
+.field + .field { margin-top: 20px; }
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--black);
+}
+.field > label,
+.field__row { margin-bottom: 6px; }
+
+.field__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
 }
+.field__row label { margin: 0; }
 
-.link-esqueci-senha {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  font: 600 13px var(--fonte-texto);
-  color: var(--vermelho);
-  text-decoration: underline;
-}
-
-.campo-entrada {
+input {
+  display: block;
   width: 100%;
-  padding: 14px;
+  height: 47px;
+  padding: 0 15px;
+  border: 1px solid #dfe3e8;
   border-radius: 12px;
-  border: 1px solid var(--linha);
-  background: var(--branco);
-  font: 14px var(--fonte-texto);
-  color: var(--tinta);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--black);
 }
+input::placeholder { color: #8c9199; }
+input:focus { border-color: var(--red); }
 
-.campo-entrada::placeholder {
-  color: var(--placeholder);
-}
-
-.campo-com-botao {
-  position: relative;
-}
-
-.campo-com-botao .campo-entrada {
-  padding-right: 84px;
-}
-
-.botao-mostrar-senha {
+.password { position: relative; }
+.password input { padding-right: 84px; }
+.password__toggle {
   position: absolute;
-  right: 8px;
   top: 50%;
+  right: 16px;
   transform: translateY(-50%);
-  padding: 6px 10px;
   border: 0;
-  border-radius: 8px;
-  background: transparent;
-  font: 600 12px var(--fonte-texto);
-  color: var(--texto-suave);
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2b2f36;
 }
+.password__toggle:hover { color: var(--red); }
 
-.botao {
-  display: inline-flex;
+/* ---------- Links ---------- */
+.link {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--red);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.link--small { font-size: 13px; }
+.link:hover { color: #8f191d; }
+
+/* ---------- Botão ---------- */
+.btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border-radius: 999px;
-  border: 1.5px solid transparent;
-  font-family: var(--fonte-texto);
-  font-weight: 600;
-  text-align: center;
-}
-
-.botao-grande {
-  padding: 15px 26px;
-  font-size: 15px;
-}
-
-.botao-largura-total {
   width: 100%;
-}
-
-.botao-vermelho {
-  background: var(--vermelho);
-  color: var(--branco);
-}
-
-.chamada {
-  text-align: center;
-  font-size: 14px;
-  color: var(--texto-suave);
-}
-
-.chamada a {
+  height: 48px;
+  margin-top: 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 15px;
   font-weight: 600;
-  color: var(--vermelho);
-  text-decoration: underline;
+  transition: background-color .2s ease;
+}
+.btn:hover { background: #8f191d; }
+
+/* ---------- Cadastro ---------- */
+.login__signup {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 22px;
+  color: #555a62;
+}
+
+/* ==========================================================
+   Responsivo
+   ========================================================== */
+@media (max-width: 900px) {
+  .login { grid-template-columns: 1fr; }
+  .login__image { display: none; }
+  .login__panel { padding: 40px 24px; }
+  h1 { font-size: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
 }

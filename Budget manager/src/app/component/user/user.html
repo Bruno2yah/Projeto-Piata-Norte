@@ -1,32 +1,36 @@
-<section class="account" aria-label="Sua conta">
+<details class="dropdown">
 
-  <header class="account__header">
-    <h2>Sua conta</h2>
-    <p>Seus dados de cadastro</p>
-  </header>
+  <summary class="dropdown__header">
+    <span class="dropdown__name">Mariano Alves da Silva</span>
+    <svg class="dropdown__chevron" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+      <path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </summary>
 
-  <dl class="account__data">
-    <div class="field">
-      <dt>Nome</dt>
-      <dd>Mariano Alves da Silva</dd>
-    </div>
-    <div class="field">
-      <dt>E-mail</dt>
-      <dd>marianoAlves@example.com</dd>
-    </div>
-    <div class="field">
-      <dt>Telefone</dt>
-      <dd>(11) 98765-4321</dd>
-    </div>
-  </dl>
+  <div class="dropdown__body">
+    <dl class="dropdown__data">
+      <div class="field">
+        <dt>Nome</dt>
+        <dd>Mariano Alves da Silva</dd>
+      </div>
+      <div class="field">
+        <dt>E-mail</dt>
+        <dd>marianoAlves@example.com</dd>
+      </div>
+      <div class="field">
+        <dt>Telefone</dt>
+        <dd>(11) 98765-4321</dd>
+      </div>
+    </dl>
 
-  <div class="account__footer">
-    <button type="button" class="logout">
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      Sair da conta
-    </button>
+    <div class="dropdown__footer">
+      <button type="button" class="logout" routerLink="/">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Sair da conta
+      </button>
+    </div>
   </div>
 
-</section>
+</details>

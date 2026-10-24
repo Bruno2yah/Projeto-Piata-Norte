@@ -1,128 +1,63 @@
-<div class="pagina-auth pagina-cadastro">
+<main class="signup">
 
-  <aside class="painel-imagem" aria-label="Imagem da Marcenaria Piata Norte">
-    <img
-      src="/assets/imagem-cadastro.jpg"
-      alt=""
-      class="imagem-painel"
-    >
-  </aside>
+  <!-- IMAGEM -->
+  <div class="signup__image">
+    <img src="Beliche.png" alt="Ambiente com móveis planejados sob medida">
+  </div>
 
-  <main class="area-formulario">
-    <div class="caixa-formulario">
+  <!-- FORMULÁRIO -->
+  <section class="signup__panel">
+    <div class="signup__box">
 
-      <a class="link-voltar-site" href="/">
-        ← Voltar ao site
+      <a routerLink="/" class="back">
+        <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+          <path d="M14 8H2M7 3L2 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Voltar ao login
       </a>
 
-      <div class="titulo-formulario">
-        <h1>Criar minha conta</h1>
-      </div>
+      <h1>Criar minha conta</h1>
 
-      <form class="formulario">
+      <form class="form" (submit)="$event.preventDefault()">
 
-        <div class="linha-dois-campos">
-
-          <div class="campo">
-            <label class="campo-rotulo" for="cadastro-nome">
-              Nome
-            </label>
-
-            <input
-              class="campo-entrada"
-              id="cadastro-nome"
-              type="text"
-              placeholder="Seu primeiro nome"
-              autocomplete="given-name">
+        <div class="form__row">
+          <div class="field">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu primeiro nome" autocomplete="given-name" required>
           </div>
-
-          <div class="campo">
-            <label class="campo-rotulo" for="cadastro-sobrenome">
-              Sobrenome
-            </label>
-
-            <input
-              class="campo-entrada"
-              id="cadastro-sobrenome"
-              type="text"
-              placeholder="Sobrenome"
-              autocomplete="family-name">
+          <div class="field">
+            <label for="sobrenome">Sobrenome</label>
+            <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" autocomplete="family-name" required>
           </div>
-
         </div>
 
-        <div class="campo">
-          <label class="campo-rotulo" for="cadastro-email">
-            E-mail
-          </label>
-
-          <input
-            class="campo-entrada"
-            id="cadastro-email"
-            type="email"
-            placeholder="seu@email.com"
-            autocomplete="email">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
         </div>
 
-        <div class="linha-dois-campos">
-
-          <div class="campo">
-            <label class="campo-rotulo" for="cadastro-senha">
-              Crie uma senha
-            </label>
-
-            <input
-              class="campo-entrada"
-              id="cadastro-senha"
-              type="password"
-              placeholder="Mínimo 8 caracteres"
-              autocomplete="new-password">
+        <div class="form__row">
+          <div class="field">
+            <label for="senha">Crie uma senha</label>
+            <input type="password" id="senha" name="senha" placeholder="Mínimo 8 caracteres" minlength="8" autocomplete="new-password" required>
           </div>
-
-          <div class="campo">
-            <label class="campo-rotulo" for="cadastro-confirmar-senha">
-              Confirme a senha
-            </label>
-
-            <input
-              class="campo-entrada"
-              id="cadastro-confirmar-senha"
-              type="password"
-              placeholder="Repita sua senha"
-              autocomplete="new-password">
+          <div class="field">
+            <label for="confirmar">Confirme a senha</label>
+            <input type="password" id="confirmar" name="confirmar" placeholder="Repita sua senha" minlength="8" autocomplete="new-password" required>
           </div>
-
         </div>
 
-        <label class="caixa-termos" for="aceitar-termos">
-
-          <input
-            type="checkbox"
-            id="aceitar-termos">
-
-          <span>
-            Li e aceito os
-            <a href="#termos-de-uso">Termos de uso</a>
-            e a
-            <a href="#politica-de-privacidade">Política de privacidade</a>
-          </span>
-
+        <label class="terms" for="termos">
+          <input type="checkbox" id="termos" name="termos" required>
+          <span>Li e aceito os Termos de uso e a Política de privacidade</span>
         </label>
 
-        <button
-          class="botao botao-vermelho botao-grande botao-largura-total"
-          type="button">
-          Criar minha conta grátis
-        </button>
-
-        <p class="chamada">
-          Já tem uma conta?
-          <a href="/login">Entrar</a>
-        </p>
-
+        <button type="submit" class="btn">Criar minha conta grátis</button>
       </form>
 
-    </div>
-  </main>
+      <p class="signup__login">Já tem uma conta? <a routerLink="/" class="link">Entrar</a></p>
 
-</div>
+    </div>
+  </section>
+
+</main>

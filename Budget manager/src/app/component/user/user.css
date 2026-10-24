@@ -1,6 +1,7 @@
 /* ==========================================================
-   Menu do usuário - "Sua conta"
+   Menu dropdown do usuário
    CSS de componente Angular: variáveis em :host
+   Abre e fecha sozinho (elemento <details>), sem TypeScript.
    ========================================================== */
 
 :host {
@@ -11,9 +12,13 @@
 
   --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
 
-  display: inline-block;
-  width: 360px;
+  /* O host só reserva o espaço do cabeçalho (48px + bordas). O cartão aberto
+     flutua por cima da página, sem empurrar nem ser empurrado pelo layout. */
+  display: block;
+  position: relative;
+  width: 300px;
   max-width: 100%;
+  height: 50px;
   font-family: var(--font-sans);
   color: var(--black);
   -webkit-font-smoothing: antialiased;
@@ -24,38 +29,64 @@
 *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 /* ---------- Cartão ---------- */
-.account {
+.dropdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: var(--white);
   border: 1px solid #e8eaee;
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 
-/* ---------- Cabeçalho ---------- */
-.account__header {
-  padding: 24px 24px 20px;
-  border-bottom: 1px solid #e8eaee;
+/* ---------- Cabeçalho (clicável) ---------- */
+.dropdown__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 48px;
+  padding: 0 18px 0 24px;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
 }
-.account__header h2 {
-  font-size: 20px;
+.dropdown__header::-webkit-details-marker { display: none; }
+.dropdown__header::marker { content: ""; }
+
+.dropdown[open] > .dropdown__header { border-bottom: 1px solid #e8eaee; }
+
+.dropdown__header:focus-visible { outline: 3px solid var(--red); outline-offset: -3px; border-radius: 20px; }
+
+.dropdown__name {
+  font-size: 15px;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 20px;
   letter-spacing: -0.01em;
   color: #111111;
-}
-.account__header p {
-  margin-top: 6px;
-  font-size: 14px;
-  line-height: 20px;
-  color: #666b73;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
+.dropdown__chevron {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: #9aa0a8;
+  transition: transform .2s ease;
+}
+.dropdown:not([open]) .dropdown__chevron { transform: rotate(180deg); }
+.dropdown__header:hover .dropdown__chevron { color: var(--black); }
+
 /* ---------- Dados ---------- */
-.account__data {
+.dropdown__data {
   display: flex;
   flex-direction: column;
-  gap: 19px;
+  gap: 15px;
   padding: 20px 24px 19px;
 }
 .field dt {
@@ -73,7 +104,7 @@
 }
 
 /* ---------- Rodapé / botão ---------- */
-.account__footer {
+.dropdown__footer {
   padding: 12px;
   border-top: 1px solid #e8eaee;
 }
@@ -100,5 +131,6 @@
 .logout svg { flex: none; }
 
 @media (prefers-reduced-motion: reduce) {
+  .dropdown__chevron,
   .logout { transition: none; }
 }
