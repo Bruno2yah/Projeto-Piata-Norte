@@ -18,20 +18,36 @@
         <div class="field">
           <label for="email">E-mail</label>
           <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
+          @if (formularioLogin.get('email')?.touched &&
+          formularioLogin.get('email')?.hasError('required')){
+            <small class="erro">Informe seu e-mail.</small>
+          }
+
+          @else if(formularioLogin.get('email')?.touched &&
+          formularioLogin.get('email')?.hasError('email')){
+            <small class="erro">Informe um e-mail válido.</small>
+          }
         </div>
 
         <div class="field">
           <div class="field__row">
             <label for="senha">Senha</label>
-            <a href="#" class="link link--small">Esqueci minha senha</a>
+            <a routerLink="/cadastro" class="link link--small">Esqueci minha senha</a>
           </div>
           <div class="password">
             <input type="password" id="senha" name="senha" placeholder="••••••••" autocomplete="current-password" required>
-            <button type="button" class="password__toggle">Mostrar</button>
+            <button type="button" class="password__toggle" (click)="alternarSenha()">{{senhaVisivel ? 'Ocultar': 'Mostrar'}}</button>
           </div>
+          @if (formularioLogin.get('senha')?.touched &&
+          formularioLogin.get('senha')?.hasError('required')){
+            <small class="erro">Informe sua senha.</small>
+          }
         </div>
 
         <button type="submit" routerLink="/dashboard" class="btn">Entrar na minha conta</button>
+        @if (mensagemSucesso){
+          <p class="mensagem_sucesso" role="status">{{mensagemSucesso}}</p>
+        }
       </form>
 
       <p class="login__signup">Não tem conta? <a routerLink="/cadastro" class="link">Cadastre-se</a></p>
