@@ -18,6 +18,7 @@ export interface Orcamento {
   arquiteto?: string;
   cliente: string;
   prazo_de_entrega?: string;
+  pagamento?: string;
   valor_total: number;
   status: string;
   itens: ItemOrcamento[];

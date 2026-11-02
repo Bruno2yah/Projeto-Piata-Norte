@@ -3,17 +3,27 @@
 
     <div class="page-content">
         <!-- Topo -->
-        <app-menu-top paginaAtual="Editando"></app-menu-top>
+        <app-menu-top [paginaAtual]="orcamentoId ? 'Editando orçamento' : 'Novo orçamento'"></app-menu-top>
         <a class="back-link" routerLink="/dashboard"><span aria-hidden="true">‹</span> Todos os orçamentos</a>
 
         <div class="page-heading">
-            <div class="eyebrow">EDITANDO · 18/10/2024</div>
+            <div class="eyebrow">{{ orcamentoId ? 'EDITANDO ORÇAMENTO' : 'NOVO ORÇAMENTO' }}</div>
             <div class="title-line">
-                <h1>Orçamento PN-2026-014</h1>
-                <span class="status"><i aria-hidden="true"></i>Em produção</span>
+                <h1>{{ orcamentoId ? 'Editar orçamento' : 'Novo orçamento' }}</h1>
+                @if (statusAtual) {
+                <span class="status"><i aria-hidden="true"></i>{{ statusAtual }}</span>
+                <button class="status-toggle-button" type="button" (click)="alternarStatus()"
+                    [disabled]="salvandoStatus || carregando || !orcamentoEncontrado">
+                    {{ salvandoStatus ? 'Atualizando...' : statusFinalizado ? 'Voltar para produção' : 'Finalizar projeto' }}
+                </button>
+                }
             </div>
-            <p class="page-subtitle">Cozinha e sala - Apê Horizonte</p>
+            <p class="page-subtitle">{{ form.controls.projeto.value || 'Preencha os dados do projeto' }}</p>
         </div>
+
+        @if (carregando) {
+        <p>Carregando orçamento...</p>
+        }
 
         <form class="budget-form" [formGroup]="form">
             <section class="card client-card" aria-labelledby="client-heading">
@@ -37,12 +47,21 @@
             <section class="card furniture-card" formArrayName="itens" aria-labelledby="furniture-heading">
                 <div class="section-head">
                     <h2 id="furniture-heading">Móveis e custos</h2>
-                    <p>2 módulos · 1200 mm livres no total. Informe as medidas de cada móvel.</p>
+                    <p>Informe as medidas e os custos de cada móvel do projeto.</p>
                 </div>
 
                 @for (item of itens.controls; track item; let i = $index) {
                 <article class="furniture-item" [formGroupName]="i" [attr.aria-label]="'Móvel ' + (i + 1)">
-                    <div class="item-heading"><strong>MÓVEL {{ i + 1 }}</strong><span>Quantidade: 1</span></div>
+                    <div class="item-heading">
+                        <strong>MÓVEL {{ i + 1 }}</strong>
+                        <div class="item-heading__actions">
+                            <span>Quantidade: 1</span>
+                            <button class="remove-item-button" type="button" (click)="removerMovel(i)"
+                                [disabled]="itens.length === 1" [attr.aria-label]="'Remover móvel ' + (i + 1)">
+                                Remover móvel
+                            </button>
+                        </div>
+                    </div>
                     <label class="field item-name">
                         <span>Nome do item</span>
                         <input type="text" formControlName="nome">
@@ -88,7 +107,6 @@
                         <input type="text" formControlName="prazo">
                     </label>
                 </div>
-                <p class="payment-note">Entrada: R$ 3.500,00 · saldo: R$ 3.500,00.</p>
                 <p class="payment-note">O prazo de execução é contado após confirmação das medidas.</p>
                 <p class="payment-note">O escopo inclui fabricação e instalação dos móveis. Não inclui eletrodomésticos
                     ou obras civis.</p>
@@ -97,15 +115,19 @@
             <section class="price-summary" aria-label="Resumo do orçamento">
                 <div class="price-total">
                     <span class="summary-label">PREÇO ATUALIZADO</span>
-                    <strong>R$ 7.000,00</strong>
+                    <strong>{{ brl(valorTotal) }}</strong>
                     <small>Sem margem ou taxa adicional neste orçamento.</small>
                 </div>
                 <div class="price-breakdown">
-                    <div><span>Armário inferior - cozinha</span><strong>R$ 4.220,00</strong></div>
-                    <div><span>Painel com rack - sala</span><strong>R$ 2.780,00</strong></div>
+                    @for (item of itens.controls; track item; let i = $index) {
+                    <div><span>{{ item.controls.nome.value || 'Móvel ' + (i + 1) }}</span><strong>{{ brl(subtotal(i)) }}</strong></div>
+                    }
                 </div>
                 <div class="summary-actions">
-                    <button class="save-button" type="button" (click)="salvar()" [disabled]="salvando">Salvar orçamento</button>
+                    <button class="save-button" type="button" (click)="salvar()"
+                        [disabled]="salvando || carregando || (!!orcamentoId && !orcamentoEncontrado)">
+                        {{ salvando ? 'Salvando...' : orcamentoId ? 'Atualizar orçamento' : 'Salvar orçamento' }}
+                    </button>
                     <button class="preview-button" type="button" routerLink="/preview">Visualizar orçamento <span
                             aria-hidden="true">›</span></button>
                 </div>

@@ -76,6 +76,30 @@ h1 {
   border-radius: 50%;
 }
 
+.status-toggle-button {
+  min-height: 34px;
+  padding: 7px 13px;
+  border: 1px solid #dedfe3;
+  border-radius: 999px;
+  background: #fff;
+  color: #a81c1c;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.status-toggle-button:hover:not(:disabled) {
+  border-color: #a81c1c;
+  background: #fce8e8;
+}
+
+.status-toggle-button:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
 .page-subtitle {
   margin: 5px 0 0;
   color: #6d727c;
@@ -210,6 +234,32 @@ h1 {
 .item-heading span {
   color: #626873;
   font-size: 12px;
+}
+
+.item-heading__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.remove-item-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #8e1616;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-item-button:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.remove-item-button:disabled {
+  color: #969ba4;
+  cursor: not-allowed;
 }
 
 .item-name {
