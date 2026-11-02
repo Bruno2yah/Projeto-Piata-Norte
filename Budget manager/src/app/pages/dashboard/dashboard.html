@@ -23,20 +23,20 @@
     <!-- Barra de Filtros e Pesquisa -->
     <section class="toolbar">
         <div class="filter-pills">
-            <button type="button" class="pill">Todos </button>
-            <button type="button" class="pill">Em produção</button>
-            <button type="button" class="pill">Finalizados</button>
+            <button type="button" class="pill" [class.pill--active]="filtroStatus === 'Todos'"
+                [attr.aria-pressed]="filtroStatus === 'Todos'" (click)="selecionarFiltro('Todos')">Todos</button>
+            <button type="button" class="pill" [class.pill--active]="filtroStatus === 'Em produção'"
+                [attr.aria-pressed]="filtroStatus === 'Em produção'"
+                (click)="selecionarFiltro('Em produção')">Em produção</button>
+            <button type="button" class="pill" [class.pill--active]="filtroStatus === 'Finalizados'"
+                [attr.aria-pressed]="filtroStatus === 'Finalizados'"
+                (click)="selecionarFiltro('Finalizados')">Finalizados</button>
         </div>
 
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="Buscar cliente, arquiteto ou projeto"/>
-            <button class="search-btn" type="button" aria-label="Pesquisar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </button>
+            <input type="search" class="search-input" placeholder="Buscar cliente, arquiteto ou projeto"
+                aria-label="Buscar orçamentos" [(ngModel)]="termoPesquisa"
+                (ngModelChange)="pesquisar($event)" (keydown.enter)="pesquisar()"/>
         </div>
     </section>
 
@@ -64,7 +64,7 @@
             <span>NOME DO EDITOR</span>
             <span>AÇÕES</span>
         </div>
-        @for (item of listaOrcamentos; track item.id_orcamento ?? $index) {
+        @for (item of orcamentosPaginados; track item.id_orcamento ?? $index) {
         <div class="budget-row">
             <div class="col-projeto">
                 <strong class="projeto-title">{{ item.nome_projeto }}</strong>
@@ -78,10 +78,10 @@
             <div class="col-text">{{ formatarData(item.data_orcamento) }}</div>
 
             <div>
-                @if (item.status === 'Em produção') {
+                @if (statusEmProducao(item)) {
                 <span class="badge badge--producao">• Em produção</span>
-                } @else if (item.status === 'Finalizado' || item.status === 'Finalizados') {
-                <span class="badge badge--finalizado">✓ {{ item.status }}</span>
+                } @else if (statusFinalizado(item)) {
+                <span class="badge badge--finalizado">✓ Finalizado</span>
                 } @else {
                 <span class="badge">{{ item.status || 'Sem status' }}</span>
                 }
@@ -90,7 +90,8 @@
             <div class="col-editor">—</div>
 
             <div class="col-acoes">
-                <button type="button" class="btn-visualizar" routerLink="/preview">Visualizar</button>
+                <button type="button" class="btn-visualizar" [routerLink]="['/preview']"
+                    [queryParams]="{ id: item.id_orcamento }">Visualizar</button>
                 <a class="action-link" [routerLink]="['/orcamento', item.id_orcamento]">Editar</a>
                 <button type="button" class="action-link action-button"
                     (click)="duplicarOrcamento(item)"
@@ -106,7 +107,7 @@
         </div>
         } @empty {
             @if (!carregando && !erro) {
-            <p>Nenhum orçamento cadastrado.</p>
+            <p>{{ listaOrcamentos.length ? 'Nenhum orçamento corresponde aos filtros.' : 'Nenhum orçamento cadastrado.' }}</p>
             }
         }
     </div>
@@ -114,13 +115,16 @@
     <!-- Rodapé e Paginação -->
     <footer class="table-footer">
         <p class="footer-info">
-            Mostrando {{ listaOrcamentos.length }} de {{ listaOrcamentos.length }} orçamentos · mais recentes primeiro
+            Mostrando {{ primeiroItemExibido }}–{{ ultimoItemExibido }} de {{ orcamentosFiltrados.length }}
+            orçamentos filtrados ({{ listaOrcamentos.length }} no total) · mais recentes primeiro
         </p>
 
         <div class="pagination">
-            <button type="button" class="page-btn">← Anterior</button>
-            <span class="page-number">1</span>
-            <button type="button" class="page-btn">Próxima →</button>
+            <button type="button" class="page-btn" (click)="paginaAnterior()"
+                [disabled]="paginaAtual === 1" aria-label="Página anterior">← Anterior</button>
+            <span class="page-number" aria-live="polite">{{ paginaAtual }} de {{ totalPaginas }}</span>
+            <button type="button" class="page-btn" (click)="proximaPagina()"
+                [disabled]="paginaAtual === totalPaginas" aria-label="Próxima página">Próxima →</button>
         </div>
     </footer>
 </div>

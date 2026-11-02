@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MenuTop } from '../../component/menu-top/menu-top';
-import { ItemOrcamento, Orcamento } from '../../models/orcamento.model';
+import { ItemOrcamento, Orcamento, OrcamentoFormDraft } from '../../models/orcamento.model';
 import { OrcamentoService } from '../../services/orcamento';
 
 function numero(valor: string | number | null | undefined): number {
@@ -57,10 +57,11 @@ export class Formulario {
 
   constructor() {
     if (!this.orcamentoId) return;
+    const orcamentoId = this.orcamentoId;
 
     this.form.disable();
     this.service
-      .obterOrcamento(this.orcamentoId)
+      .obterOrcamento(orcamentoId)
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: (orcamento) => {
@@ -69,6 +70,8 @@ export class Formulario {
           } else {
             this.orcamentoOriginal = orcamento;
             this.preencherFormulario(orcamento);
+            const rascunho = this.service.obterRascunho(orcamentoId);
+            if (rascunho) this.aplicarRascunho(rascunho);
             this.orcamentoEncontrado = true;
             this.form.enable();
           }
@@ -165,6 +168,19 @@ export class Formulario {
     if (this.itens.length === 0) this.itens.push(this.novoItem());
   }
 
+  private aplicarRascunho(rascunho: OrcamentoFormDraft): void {
+    this.form.patchValue({
+      cliente: rascunho.cliente,
+      arquiteto: rascunho.arquiteto,
+      projeto: rascunho.projeto,
+      pagamento: rascunho.pagamento,
+      prazo: rascunho.prazo,
+    });
+    this.itens.clear();
+    for (const item of rascunho.itens) this.itens.push(this.novoItem(item));
+    if (this.itens.length === 0) this.itens.push(this.novoItem());
+  }
+
   adicionarMovel(): void {
     this.itens.push(this.novoItem());
   }
@@ -183,20 +199,24 @@ export class Formulario {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
   }
 
-  async salvar(): Promise<void> {
-    this.erro = '';
+  async visualizar(): Promise<void> {
+    if (!this.orcamentoId || !this.orcamentoEncontrado || this.carregando) return;
 
-    if (this.carregando || !this.orcamentoOriginal && this.orcamentoId) {
-      this.erro = 'Aguarde o carregamento do orçamento antes de salvar.';
-      return;
-    }
+    const rascunho = this.form.getRawValue();
+    this.service.guardarRascunho(this.orcamentoId, rascunho);
+    const orcamento = this.montarOrcamento();
+    orcamento.id_orcamento = this.orcamentoId;
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      this.erro = 'Preencha cliente, projeto, prazo e os dados de cada móvel (medidas só com números).';
-      return;
-    }
+    await this.router.navigate(['/preview'], {
+      state: {
+        orcamentoPreview: orcamento,
+        rascunhoFormulario: rascunho,
+        retornoPreview: this.router.url,
+      },
+    });
+  }
 
+  private montarOrcamento(): Orcamento {
     const v = this.form.getRawValue();
     const itens: ItemOrcamento[] = v.itens.map((i) => {
       const largura = numero(i.comprimento);
@@ -222,7 +242,7 @@ export class Formulario {
       };
     });
 
-    const orcamento: Orcamento = {
+    return {
       nome_projeto: v.projeto.trim(),
       data_orcamento: this.orcamentoOriginal?.data_orcamento ?? this.hojeIso(),
       cliente: v.cliente.trim(),
@@ -230,15 +250,31 @@ export class Formulario {
       valor_total: arredondar(itens.reduce((soma, item) => soma + item.valor, 0)),
       status: this.orcamentoOriginal?.status ?? this.statusInicial,
       itens,
+      arquiteto: v.arquiteto.trim(),
+      pagamento: v.pagamento.trim(),
     };
+  }
 
-    orcamento.arquiteto = v.arquiteto.trim();
-    orcamento.pagamento = v.pagamento.trim();
+  async salvar(): Promise<void> {
+    this.erro = '';
 
+    if (this.carregando || !this.orcamentoOriginal && this.orcamentoId) {
+      this.erro = 'Aguarde o carregamento do orçamento antes de salvar.';
+      return;
+    }
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.erro = 'Preencha cliente, projeto, prazo e os dados de cada móvel (medidas só com números).';
+      return;
+    }
+
+    const orcamento = this.montarOrcamento();
     this.salvando = true;
     try {
       if (this.orcamentoId) {
         await this.service.atualizarOrcamento(this.orcamentoId, orcamento);
+        this.service.limparRascunho(this.orcamentoId);
       } else {
         await this.service.criarOrcamento(orcamento);
       }

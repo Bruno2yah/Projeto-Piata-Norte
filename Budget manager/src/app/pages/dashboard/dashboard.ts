@@ -8,6 +8,8 @@ import { MenuTop } from '../../component/menu-top/menu-top';
 import { Orcamento } from '../../models/orcamento.model';
 import { OrcamentoService } from '../../services/orcamento';
 
+type FiltroStatus = 'Todos' | 'Em produção' | 'Finalizados';
+
 @Component({
   selector: 'app-dashboard',
   imports: [MenuTop, FormsModule, CardSummary, RouterLink],
@@ -15,6 +17,7 @@ import { OrcamentoService } from '../../services/orcamento';
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  readonly itensPorPagina = 10;
   private readonly orcamentoService = inject(OrcamentoService);
   private readonly changeDetector = inject(ChangeDetectorRef);
 
@@ -23,11 +26,16 @@ export class Dashboard {
   erro = '';
   erroExclusao = '';
   mensagemAcao = '';
+  filtroStatus: FiltroStatus = 'Todos';
+  termoPesquisa = '';
+  paginaAtual = 1;
+  private termoPesquisaAplicado = '';
   orcamentoParaExcluir: Orcamento | null = null;
   duplicandoId: string | null = null;
   excluindo = false;
 
   constructor() {
+    this.orcamentoService.limparRascunhos();
     this.orcamentoService
       .obterOrcamentos()
       .pipe(takeUntilDestroyed())
@@ -38,6 +46,7 @@ export class Dashboard {
             this.dataEmMilissegundos(b.data_orcamento) -
             this.dataEmMilissegundos(a.data_orcamento),
         );
+        this.ajustarPaginaAtual();
         this.carregando = false;
         this.changeDetector.detectChanges();
         },
@@ -51,13 +60,90 @@ export class Dashboard {
   }
 
   get totalEmProducao(): number {
-    return this.listaOrcamentos.filter((orcamento) => orcamento.status === 'Em produção').length;
+    return this.listaOrcamentos.filter((orcamento) => this.statusEmProducao(orcamento)).length;
   }
 
   get totalFinalizados(): number {
-    return this.listaOrcamentos.filter(
-      (orcamento) => orcamento.status === 'Finalizado' || orcamento.status === 'Finalizados',
-    ).length;
+    return this.listaOrcamentos.filter((orcamento) => this.statusFinalizado(orcamento)).length;
+  }
+
+  get orcamentosFiltrados(): Orcamento[] {
+    const termo = this.normalizar(this.termoPesquisaAplicado);
+    return this.listaOrcamentos.filter((orcamento) => {
+      const correspondeStatus =
+        this.filtroStatus === 'Todos' ||
+        (this.filtroStatus === 'Em produção' && this.statusEmProducao(orcamento)) ||
+        (this.filtroStatus === 'Finalizados' && this.statusFinalizado(orcamento));
+      const campos = [
+        orcamento.nome_projeto,
+        orcamento.cliente,
+        orcamento.arquiteto,
+        orcamento.status,
+        orcamento.id_orcamento,
+      ];
+      const correspondePesquisa =
+        !termo || campos.some((campo) => this.normalizar(campo ?? '').includes(termo));
+      return correspondeStatus && correspondePesquisa;
+    });
+  }
+
+  get orcamentosPaginados(): Orcamento[] {
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    return this.orcamentosFiltrados.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.orcamentosFiltrados.length / this.itensPorPagina));
+  }
+
+  get primeiroItemExibido(): number {
+    return this.orcamentosFiltrados.length === 0
+      ? 0
+      : (this.paginaAtual - 1) * this.itensPorPagina + 1;
+  }
+
+  get ultimoItemExibido(): number {
+    return Math.min(this.paginaAtual * this.itensPorPagina, this.orcamentosFiltrados.length);
+  }
+
+  selecionarFiltro(filtro: FiltroStatus): void {
+    this.filtroStatus = filtro;
+    this.paginaAtual = 1;
+  }
+
+  pesquisar(termo = this.termoPesquisa): void {
+    this.termoPesquisa = termo;
+    this.termoPesquisaAplicado = termo.trim();
+    this.paginaAtual = 1;
+  }
+
+  irParaPagina(pagina: number): void {
+    this.paginaAtual = Math.min(Math.max(1, pagina), this.totalPaginas);
+  }
+
+  paginaAnterior(): void {
+    this.irParaPagina(this.paginaAtual - 1);
+  }
+
+  proximaPagina(): void {
+    this.irParaPagina(this.paginaAtual + 1);
+  }
+
+  private ajustarPaginaAtual(): void {
+    this.paginaAtual = Math.min(this.paginaAtual, this.totalPaginas);
+  }
+
+  statusEmProducao(orcamento: Orcamento): boolean {
+    return this.normalizar(orcamento.status) === 'em producao';
+  }
+
+  statusFinalizado(orcamento: Orcamento): boolean {
+    const status = this.normalizar(orcamento.status);
+    return status === 'finalizado' || status === 'finalizados';
+  }
+
+  private normalizar(valor: string): string {
+    return valor.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
   }
 
   async duplicarOrcamento(orcamento: Orcamento): Promise<void> {

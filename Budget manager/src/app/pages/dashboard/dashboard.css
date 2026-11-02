@@ -437,10 +437,22 @@
   transition: all 0.3s;
 }
 
+.page-btn:hover:not(:disabled) {
+  background: #141414;
+  color: #ffffff;
+}
+
+.page-btn:disabled {
+  border-color: #dedede;
+  color: #999999;
+  cursor: not-allowed;
+}
+
 .page-number {
-  width: 32px;
+  min-width: 64px;
   height: 32px;
-  border-radius: 50%;
+  padding: 0 10px;
+  border-radius: 999px;
   background: #a81c1c;
   color: #ffffff;
   font-size: 12px;

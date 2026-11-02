@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, addDoc, collectionData, doc, docData, deleteDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Orcamento } from '../models/orcamento.model';
+import { Orcamento, OrcamentoFormDraft } from '../models/orcamento.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,23 @@ import { Orcamento } from '../models/orcamento.model';
 export class OrcamentoService {
   private firestore: Firestore = inject(Firestore);
   private orcamentosRef = collection(this.firestore, 'orcamentos');
+  private readonly rascunhosFormulario = new Map<string, OrcamentoFormDraft>();
+
+  guardarRascunho(id: string, rascunho: OrcamentoFormDraft): void {
+    this.rascunhosFormulario.set(id, rascunho);
+  }
+
+  obterRascunho(id: string): OrcamentoFormDraft | undefined {
+    return this.rascunhosFormulario.get(id);
+  }
+
+  limparRascunhos(): void {
+    this.rascunhosFormulario.clear();
+  }
+
+  limparRascunho(id: string): void {
+    this.rascunhosFormulario.delete(id);
+  }
 
   // Consulta todos os orçamentos no Firestore em tempo real
   obterOrcamentos(): Observable<Orcamento[]> {

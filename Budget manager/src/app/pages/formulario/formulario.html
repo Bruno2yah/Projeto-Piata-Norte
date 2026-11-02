@@ -128,8 +128,11 @@
                         [disabled]="salvando || carregando || (!!orcamentoId && !orcamentoEncontrado)">
                         {{ salvando ? 'Salvando...' : orcamentoId ? 'Atualizar orçamento' : 'Salvar orçamento' }}
                     </button>
-                    <button class="preview-button" type="button" routerLink="/preview">Visualizar orçamento <span
-                            aria-hidden="true">›</span></button>
+                    @if (orcamentoId && orcamentoEncontrado && !carregando) {
+                    <button class="preview-button" type="button" (click)="visualizar()">Visualizar orçamento
+                        <span aria-hidden="true">›</span>
+                    </button>
+                    }
                 </div>
                 @if (erro) {
                 <p class="payment-note" role="alert">{{ erro }}</p>

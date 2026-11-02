@@ -73,6 +73,8 @@ Quando os documentos chegam:
 3. A tela atualiza a detecção de mudanças para exibir a resposta assíncrona do Firestore.
 4. Os cartões de resumo calculam o total de orçamentos, os que estão **Em produção** e os **Finalizados**.
 5. Cada linha exibe projeto, cliente, arquiteto, data e status. Campos opcionais ausentes são apresentados com um valor alternativo.
+6. Os filtros **Todos**, **Em produção** e **Finalizados** são aplicados à lista atualizada em tempo real. A pesquisa também filtra enquanto o usuário digita, por projeto, cliente, arquiteto, status ou ID; o botão de pesquisa aplica o termo digitado.
+7. **Visualizar** envia o ID da linha selecionada para `/preview?id=...`, que carrega os dados do documento correspondente.
 
 Durante a consulta, a página informa que está carregando. Se a consulta falhar, exibe uma mensagem de erro; se a coleção não tiver documentos, informa que nenhum orçamento foi cadastrado.
 
@@ -97,6 +99,13 @@ Na edição também é possível alterar o status do projeto:
 
 Se o documento não existir ou não puder ser carregado, a tela informa o problema. Se a atualização falhar, permanece no formulário e apresenta uma mensagem de erro.
 
+### Prévia do orçamento
+
+- O botão **Visualizar orçamento** só aparece ao editar um documento existente; não há prévia de orçamento ainda não criado.
+- Na edição, a prévia usa os valores atuais do formulário, mesmo que ainda não tenham sido salvos. O rascunho original do formulário é mantido em memória e restaurado ao voltar, sem atualizar o Firestore.
+- No dashboard, a prévia carrega o orçamento selecionado pelo ID. A rota sem ID continua exibindo apenas um exemplo explicitamente fictício.
+- **Salvar como PDF** abre a impressão do navegador, onde é possível escolher a opção de salvar em PDF.
+
 ## 6. Persistência no serviço
 
 `OrcamentoService` centraliza as operações da coleção `orcamentos`:
@@ -118,6 +127,7 @@ Se o documento não existir ou não puder ser carregado, a tela informa o proble
 - A edição preserva a data original do orçamento, em vez de substituí-la pela data em que o usuário fez a alteração.
 - O total e os valores por móvel são calculados a partir dos campos do formulário, não de valores fixos na tela.
 - O ambiente do projeto deve usar uma única versão compatível do Firebase. Nesta implementação, `firebase` foi alinhado à versão 12 usada pelo AngularFire para evitar incompatibilidade de tipos entre instâncias da API Firestore.
+- A coleção `orcamentos` contém 20 documentos fictícios de demonstração, com IDs `demo-exemplo-ficticio-001` a `demo-exemplo-ficticio-020`; 10 estão **Em produção** e 10 **Finalizados**.
 
 ## 8. Duplicação e exclusão pelo dashboard
 
