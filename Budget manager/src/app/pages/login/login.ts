@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -8,4 +8,28 @@ import { RouterLink } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class Login {}
+export class Login {
+  formularioLogin=new FormGroup({
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email
+    ]),
+    senha:new FormControl('', [
+      Validators.required
+    ])
+  });
+  mensagemSucesso='';
+
+  validarLogin(){
+    if (this.formularioLogin.invalid){
+      this.formularioLogin.markAllAsTouched();
+      this.mensagemSucesso = '';
+      return;
+    }
+    this.mensagemSucesso='Campos preenchidos corretamente!';
+  }
+  senhaVisivel=false;
+  alternarSenha(){
+    this.senhaVisivel=!this.senhaVisivel;
+  }
+}
