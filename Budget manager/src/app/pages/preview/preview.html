@@ -1,8 +1,9 @@
 <div class="page">
 
-    <!-- TOPO -->
+
     <app-menu-top paginaAtual="Visualizar PDF"></app-menu-top>
-    <!-- VOLTAR -->
+
+    <!-- voltar -->
     <a routerLink="/orcamento" class="back">
         <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
             <path d="M14 8H2M7 3L2 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -11,12 +12,12 @@
         Voltar ao orçamento
     </a>
 
-    <!-- TÍTULO + AÇÕES -->
+    
     <section class="heading">
         <div class="heading__text">
             <span class="eyebrow">Prévia do PDF</span>
             <h1>Orçamento pronto para conferir.</h1>
-            <p class="heading__sub">PN-2026-014 · Ana Martins</p>
+            <p class="heading__sub">{{ montarCodigo(orcamentoSelecionado()!) }} · {{ orcamentoSelecionado()?.cliente }}</p>
         </div>
 
         <div class="actions">
@@ -25,42 +26,50 @@
         </div>
     </section>
 
-    <!-- PRÉVIA -->
+   
     <section class="preview">
-        <article class="paper" aria-label="Prévia do orçamento PN-2026-014">
+        <article class="paper" aria-label="Prévia do orçamento">
 
             <div class="paper__head">
-                <span class="paper__logo">PN</span>
+                <img src="Logo.png" alt="Logotipo Piatã Norte" style="width: 60px; height: 60px; object-fit: contain; display: block; margin-bottom: 10px;">
                 <div class="paper__title">
                     <h2>Orçamento</h2>
-                    <p>São Paulo, 16 de Outubro de 2026</p>
+                    <p>São Paulo, {{ formatarDataExtensa(orcamentoSelecionado()?.data_orcamento ?? '') }}</p>
                 </div>
             </div>
 
-            <p class="paper__ref">Orçamento PN-2026-014</p>
+            <p class="paper__ref">{{ montarCodigo(orcamentoSelecionado()!) }}</p>
 
-            <p>A/c: Arquiteta Beatriz Costa.</p>
-            <p>Cliente Ana Martins.</p>
+            <p>A/c: {{ orcamentoSelecionado()?.arquiteto }}.</p>
+            <p>Cliente {{ orcamentoSelecionado()?.cliente }}.</p>
             <p>Conforme solicitação, estamos enviando orçamento para os seguintes itens:</p>
 
-            <p>1- Fabricar e instalar armário inferior para cozinha, com acabamento em MDF amadeirado.</p>
-            <p>Medidas: 3,00 m de comprimento, 0,90 m de altura e 0,60 m de profundidade.<br>Quantidade: 1. Valor: R$
-                4.220,00</p>
-
-            <p>2- Fabricar e instalar painel com rack para sala, com acabamento em MDF amadeirado.</p>
-            <p>Medidas: 2,00 m de comprimento, 2,40 m de altura e 0,35 m de profundidade.<br>Quantidade: 1. Valor: R$
-                2.780,00</p>
+            
+            @for (movel of orcamentoSelecionado()?.itens ?? []; track movel; let posicao = $index) {
+                <p>{{ posicao + 1 }}- {{ movel.descricao }}</p>
+                <p>
+                    Medidas: {{ formatarMetros(movel.med_largura) }} m de comprimento, 
+                    {{ formatarMetros(movel.med_altura) }} m de altura e 
+                    {{ formatarMetros(movel.med_profundidade) }} m de profundidade.<br>
+                    Quantidade: 1. Valor: {{ formatarReais(movel.valor) }}
+                </p>
+            }
 
             <h3 class="paper__subtitle">CONDIÇÕES DO ORÇAMENTO</h3>
 
             <ul class="paper__list">
-                <li>Prazo: 35 dias úteis após aprovação e conferência das medidas.</li>
+                <li>Prazo: {{ orcamentoSelecionado()?.prazo_de_entrega }} após aprovação e conferência das medidas.</li>
                 <li>1 ano de garantia, observadas as condições adequadas de uso.</li>
-                <li>Pagamento: 50% na contratação e 50% na entrega e instalação.<br><span class="paper__cont">Entrada de
-                        R$ 3.500,00 e saldo de R$ 3.500,00.</span></li>
+                <li>
+                    Pagamento: 50% na contratação e 50% na entrega e instalação.<br>
+                    <span class="paper__cont">
+                        Entrada de {{ formatarReais(calcularMetade(orcamentoSelecionado()!)) }} e 
+                        saldo de {{ formatarReais(calcularMetade(orcamentoSelecionado()!)) }}.
+                    </span>
+                </li>
             </ul>
 
-            <p class="paper__total"><strong>•&nbsp; O valor total é de R$ 7.000,00.</strong></p>
+            <p class="paper__total"><strong>•&nbsp; O valor total é de {{ formatarReais(orcamentoSelecionado()?.valor_total ?? 0) }}.</strong></p>
 
             <p>Agradecemos a oportunidade e permanecemos à disposição para quaisquer esclarecimentos.</p>
             <p><strong>Atenciosamente,</strong></p>
@@ -73,12 +82,12 @@
                 <span>Rua José Henrique Bello 04 - Jardim Alvorada - São Paulo - SP.</span>
                 <span>Mariano Alves (11) 91854-3085</span>
                 <span>Homero Pereira (11) 96440-7514</span>
-                <span>Email: piatanorte.moveis@hotmail.com</span>
+                <span>Email: piatanorte.moveis&#64;hotmail.com</span>
             </address>
 
         </article>
 
-        <p class="preview__caption">Fim do documento · página 1 de 1 · PN-2026-014.pdf</p>
+        <p class="preview__caption">Fim do documento · página 1 de 1 · {{ montarCodigo(orcamentoSelecionado()!) }}.pdf</p>
     </section>
 
 </div>
