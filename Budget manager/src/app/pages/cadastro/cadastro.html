@@ -18,45 +18,81 @@
 
       <h1>Criar minha conta</h1>
 
-      <form class="form" (submit)="$event.preventDefault()">
+      <form class="form" [formGroup]="formularioCadastro" (ngSubmit)="validarCadastro()" novalidate>
 
         <div class="form__row">
           <div class="field">
             <label for="nome">Nome</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu primeiro nome" autocomplete="given-name" required>
+            <input type="text" id="nome" formControlName="nome" placeholder="Seu primeiro nome" autocomplete="given-name" >
+            @if (formularioCadastro.get('nome')?.touched &&
+            formularioCadastro.get('nome')?.hasError('required')){
+              <small class="erro">Informe seu nome.</small>
+            }
+
           </div>
           <div class="field">
             <label for="sobrenome">Sobrenome</label>
-            <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" autocomplete="family-name" required>
+            <input type="text" id="sobrenome" formControlName="sobrenome" placeholder="Sobrenome" autocomplete="family-name" >
+            @if (formularioCadastro.get('sobrenome')?.touched &&
+            formularioCadastro.get('sobrenome')?.hasError('required')){
+              <small class="erro">Informe seu sobrenome.</small>
+            }
           </div>
         </div>
 
         <div class="field">
           <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
+          <input type="email" id="email" formControlName="email" placeholder="seu@email.com" autocomplete="email" >
+          @if (formularioCadastro.get('email')?.touched &&
+          formularioCadastro.get('email')?.hasError('required')){
+            <small class="erro">Informe seu e-mail.</small>
+          }
+
+          @else if (formularioCadastro.get('email')?.touched &&
+          formularioCadastro.get('email')?.hasError('email')){
+            <small class="erro">Informe um e-mail válido.</small>
+          }
         </div>
 
         <div class="form__row">
           <div class="field">
             <label for="senha">Crie uma senha</label>
-            <input type="password" id="senha" name="senha" placeholder="Mínimo 8 caracteres" minlength="8" autocomplete="new-password" required>
+            <input type="password" id="senha" formControlName="senha" placeholder="Mínimo 8 caracteres" minlength="8" autocomplete="new-password" >
+            @if (formularioCadastro.get('senha')?.touched &&
+            formularioCadastro.get('senha')?.hasError('required')){
+              <small class="erro">Informe sua senha.</small>
+            }
+            @else if (formularioCadastro.get('senha')?.touched &&
+            formularioCadastro.get('senha')?.hasError('minlength')){
+              <small class="erro">A senha deve ter mais de 8 caracteres.</small>
+            }
           </div>
           <div class="field">
             <label for="confirmar">Confirme a senha</label>
-            <input type="password" id="confirmar" name="confirmar" placeholder="Repita sua senha" minlength="8" autocomplete="new-password" required>
+            <input type="password" id="confirmar" formControlName="confirmar" placeholder="Repita sua senha" minlength="8" autocomplete="new-password" >
+            @if (formularioCadastro.get('confirmar')?.touched &&
+            formularioCadastro.get('confirmar')?.hasError('required')){
+              <small class="erro">Confirme sua senha.</small>
+            }
+            @else if (formularioCadastro.get('confirmar')?.hasError('senhaDiferente')){
+              <small class="erro">As senha não coincidem.</small>
+            }
           </div>
         </div>
 
         <label class="terms" for="termos">
-          <input type="checkbox" id="termos" name="termos" required>
+          <input type="checkbox" id="termos" formControlName="termos" >
           <span>Li e aceito os Termos de uso e a Política de privacidade</span>
         </label>
-
-<<<<<<< HEAD
+        @if (formularioCadastro.get('termos')?.touched &&
+        formularioCadastro.get('termos')?.hasError('required')){
+          <small class="erro">Você precisa aceitar os termos.</small>
+        }
         <button type="submit" class="btn">Criar conta</button>
-=======
-        <button type="submit" class="btn">Criar Conta</button>
->>>>>>> 72f8949b3cc3c1fc22aec87a91a8d70eee881248
+
+        @if (mensagemSucesso){
+          <p class="mensagem_sucesso" role="status">{{mensagemSucesso}}</p>
+        }
       </form>
 
       <p class="signup__login">Já tem uma conta? <a routerLink="/login" class="link">Entrar</a></p>
