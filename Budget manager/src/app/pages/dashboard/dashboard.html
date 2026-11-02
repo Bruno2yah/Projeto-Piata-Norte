@@ -5,7 +5,7 @@
     <!-- Secção Principal de Boas-Vindas -->
     <section class="hero">
         <div class="hero__text">
-            <h1>Oi, Mariano! Como estão os<br>orçamentos hoje?</h1>
+            <h1>Como estão os orçamentos hoje?</h1>
             <p>Da proposta à entrega: acompanhe o trabalho da marcenaria.</p>
         </div>
         <button class="btn-novo" type="button" routerLink="/orcamento">
@@ -15,35 +15,46 @@
 
     <!-- Cartões de Resumo (KPIs) -->
     <section class="summary-grid">
-        <app-card-summary label="Orçamentos" [number]=5 sub="Neste Periodo"></app-card-summary>
-        <app-card-summary label="Em produção" [number]=3 sub="Mão na massa" class="summary-card--progress"></app-card-summary>
-        <app-card-summary label="Orçamentos" [number]=2 sub="Entregues e instalados"></app-card-summary>
+        <app-card-summary label="Orçamentos" [number]="listaOrcamentos.length" sub="Cadastrados"></app-card-summary>
+        <app-card-summary label="Em produção" [number]="totalEmProducao" sub="Mão na massa" class="summary-card--progress"></app-card-summary>
+        <app-card-summary label="Finalizados" [number]="totalFinalizados" sub="Entregues e instalados"></app-card-summary>
     </section>
 
     <!-- Barra de Filtros e Pesquisa -->
     <section class="toolbar">
         <div class="filter-pills">
-            <button type="button" class="pill">Todos </button>
-            <button type="button" class="pill">Em produção</button>
-            <button type="button" class="pill">Finalizados</button>
+            <button type="button" class="pill" [class.pill--active]="filtroStatus === 'Todos'"
+                [attr.aria-pressed]="filtroStatus === 'Todos'" (click)="selecionarFiltro('Todos')">Todos</button>
+            <button type="button" class="pill" [class.pill--active]="filtroStatus === 'Em produção'"
+                [attr.aria-pressed]="filtroStatus === 'Em produção'"
+                (click)="selecionarFiltro('Em produção')">Em produção</button>
+            <button type="button" class="pill" [class.pill--active]="filtroStatus === 'Finalizados'"
+                [attr.aria-pressed]="filtroStatus === 'Finalizados'"
+                (click)="selecionarFiltro('Finalizados')">Finalizados</button>
         </div>
 
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="Buscar cliente, arquiteto ou projeto"/>
-            <button class="search-btn" type="button" aria-label="Pesquisar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </button>
+            <input type="search" class="search-input" placeholder="Buscar cliente, arquiteto ou projeto"
+                aria-label="Buscar orçamentos" [(ngModel)]="termoPesquisa"
+                (ngModelChange)="pesquisar($event)" (keydown.enter)="pesquisar()"/>
         </div>
     </section>
 
     
+    @if (erro) {
+    <p role="alert">{{ erro }}</p>
+    }
+
+    @if (mensagemAcao) {
+    <p class="action-feedback" role="status">{{ mensagemAcao }}</p>
+    }
+
+    @if (carregando) {
+    <p>Carregando orçamentos...</p>
+    }
+
     <!-- Lista de Orçamentos -->
     <div class="budget-list">
-        <!-- Cabeçalho da Tabela -->
         <div class="table-header">
             <span>PROJETO</span>
             <span>CLIENTE</span>
@@ -53,57 +64,95 @@
             <span>NOME DO EDITOR</span>
             <span>AÇÕES</span>
         </div>
-        @for (item of listaOrcamentos; track item.codigo) {
+        @for (item of orcamentosPaginados; track item.id_orcamento ?? $index) {
         <div class="budget-row">
-            <!-- Coluna: Projeto -->
             <div class="col-projeto">
-                <strong class="projeto-title">{{ item.titulo }}</strong>
+                <strong class="projeto-title">{{ item.nome_projeto }}</strong>
                 <span class="projeto-code">
-                    {{ item.codigo }}@if (item.subtitulo) { · {{ item.subtitulo }} }
+                    {{ item.id_orcamento ?? '—' }}@if (item.prazo_de_entrega) { · {{ item.prazo_de_entrega }} }
                 </span>
             </div>
 
-            <!-- Coluna: Cliente -->
             <div class="col-text">{{ item.cliente }}</div>
+            <div class="col-text">{{ item.arquiteto || '—' }}</div>
+            <div class="col-text">{{ formatarData(item.data_orcamento) }}</div>
 
-            <!-- Coluna: Arquiteto -->
-            <div class="col-text">{{ item.arquiteto }}</div>
-
-            <!-- Coluna: Data -->
-            <div class="col-text">{{ item.data }}</div>
-
-            <!-- Coluna: Status -->
             <div>
-                @if (item.status === 'Em produção') {
+                @if (statusEmProducao(item)) {
                 <span class="badge badge--producao">• Em produção</span>
-                } @else {
+                } @else if (statusFinalizado(item)) {
                 <span class="badge badge--finalizado">✓ Finalizado</span>
+                } @else {
+                <span class="badge">{{ item.status || 'Sem status' }}</span>
                 }
             </div>
 
-            <!-- Coluna: Nome do Editor -->
-            <div class="col-editor">{{ item.editor }}</div>
+            <div class="col-editor">—</div>
 
-            <!-- Coluna: Ações -->
             <div class="col-acoes">
-                <button type="button" class="btn-visualizar" routerLink="/preview">Visualizar</button>
-                <a href="javascript:void(0)" class="action-link">Editar</a>
-                <a href="javascript:void(0)" class="action-link">Duplicar</a>
+                <button type="button" class="btn-visualizar" [routerLink]="['/preview']"
+                    [queryParams]="{ id: item.id_orcamento }">Visualizar</button>
+                <a class="action-link" [routerLink]="['/orcamento', item.id_orcamento]">Editar</a>
+                <button type="button" class="action-link action-button"
+                    (click)="duplicarOrcamento(item)"
+                    [disabled]="!!duplicandoId || excluindo">
+                    {{ duplicandoId === item.id_orcamento ? 'Duplicando...' : 'Duplicar' }}
+                </button>
+                <button type="button" class="action-link action-button action-link--danger"
+                    (click)="solicitarExclusao(item)"
+                    [disabled]="excluindo || !!duplicandoId">
+                    Excluir
+                </button>
             </div>
         </div>
+        } @empty {
+            @if (!carregando && !erro) {
+            <p>{{ listaOrcamentos.length ? 'Nenhum orçamento corresponde aos filtros.' : 'Nenhum orçamento cadastrado.' }}</p>
+            }
         }
     </div>
 
     <!-- Rodapé e Paginação -->
     <footer class="table-footer">
         <p class="footer-info">
-            Mostrando 5 de 5 orçamentos · mais recentes primeiro
+            Mostrando {{ primeiroItemExibido }}–{{ ultimoItemExibido }} de {{ orcamentosFiltrados.length }}
+            orçamentos filtrados ({{ listaOrcamentos.length }} no total) · mais recentes primeiro
         </p>
 
         <div class="pagination">
-            <button type="button" class="page-btn">← Anterior</button>
-            <span class="page-number">1</span>
-            <button type="button" class="page-btn">Próxima →</button>
+            <button type="button" class="page-btn" (click)="paginaAnterior()"
+                [disabled]="paginaAtual === 1" aria-label="Página anterior">← Anterior</button>
+            <span class="page-number" aria-live="polite">{{ paginaAtual }} de {{ totalPaginas }}</span>
+            <button type="button" class="page-btn" (click)="proximaPagina()"
+                [disabled]="paginaAtual === totalPaginas" aria-label="Próxima página">Próxima →</button>
         </div>
     </footer>
 </div>
+
+@if (orcamentoParaExcluir) {
+<div class="modal-overlay">
+    <section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title"
+        aria-describedby="delete-modal-description" tabindex="-1">
+        <div class="confirm-modal__icon" aria-hidden="true">!</div>
+        <p class="confirm-modal__eyebrow">CANCELAMENTO DE ORÇAMENTO</p>
+        <h2 id="delete-modal-title">Excluir este orçamento?</h2>
+        <p id="delete-modal-description" class="confirm-modal__description">
+            Você está prestes a excluir <strong>{{ orcamentoParaExcluir.nome_projeto }}</strong>,
+            do cliente {{ orcamentoParaExcluir.cliente }}. Essa ação não poderá ser desfeita.
+        </p>
+        @if (erroExclusao) {
+        <p class="confirm-modal__error" role="alert">{{ erroExclusao }}</p>
+        }
+        <div class="confirm-modal__actions">
+            <button type="button" class="modal-button modal-button--secondary"
+                (click)="cancelarExclusao()" [disabled]="excluindo">
+                Manter orçamento
+            </button>
+            <button type="button" class="modal-button modal-button--danger"
+                (click)="confirmarExclusao()" [disabled]="excluindo" autofocus>
+                {{ excluindo ? 'Excluindo...' : 'Sim, excluir' }}
+            </button>
+        </div>
+    </section>
+</div>
+}

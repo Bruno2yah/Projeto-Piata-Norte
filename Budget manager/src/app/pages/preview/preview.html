@@ -1,75 +1,78 @@
 <div class="page">
-
-
     <app-menu-top paginaAtual="Visualizar PDF"></app-menu-top>
 
-    <!-- voltar -->
-    <a routerLink="/orcamento" class="back">
+    <button type="button" class="back" (click)="voltar()">
         <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
             <path d="M14 8H2M7 3L2 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                 stroke-linejoin="round" />
         </svg>
-        Voltar ao orçamento
-    </a>
+        {{ retornoPreview.startsWith('/orcamento/') ? 'Voltar ao orçamento' : 'Voltar aos orçamentos' }}
+    </button>
 
-    
+    @if (orcamentoSelecionado(); as orcamento) {
     <section class="heading">
         <div class="heading__text">
             <span class="eyebrow">Prévia do PDF</span>
             <h1>Orçamento pronto para conferir.</h1>
-            <p class="heading__sub">{{ montarCodigo(orcamentoSelecionado()!) }} · {{ orcamentoSelecionado()?.cliente }}</p>
+            <p class="heading__sub">{{ montarCodigo(orcamento) }} · {{ orcamento.cliente }}</p>
+            @if (statusEhProducao(orcamento.status)) {
+            <span class="status-badge status-badge--producao">Em produção</span>
+            } @else if (statusEhFinalizado(orcamento.status)) {
+            <span class="status-badge status-badge--finalizado">Finalizado</span>
+            } @else {
+            <span class="status-badge">{{ orcamento.status }}</span>
+            }
         </div>
 
         <div class="actions">
-            <button type="button" class="btn btn--red">Baixar PDF</button>
-            <button type="button" class="btn btn--outline">Imprimir</button>
+            <button type="button" class="btn btn--red" (click)="imprimir()">Salvar como PDF</button>
+            <button type="button" class="btn btn--outline" (click)="imprimir()">Imprimir</button>
         </div>
     </section>
 
-   
     <section class="preview">
         <article class="paper" aria-label="Prévia do orçamento">
-
             <div class="paper__head">
-                <img src="Logo.png" alt="Logotipo Piatã Norte" style="width: 60px; height: 60px; object-fit: contain; display: block; margin-bottom: 10px;">
+                <img src="Logo.png" alt="Logotipo Piatã Norte"
+                    style="width: 60px; height: 60px; object-fit: contain; display: block; margin-bottom: 10px;">
                 <div class="paper__title">
                     <h2>Orçamento</h2>
-                    <p>São Paulo, {{ formatarDataExtensa(orcamentoSelecionado()?.data_orcamento ?? '') }}</p>
+                    <p>São Paulo, {{ formatarDataExtensa(orcamento.data_orcamento) }}</p>
                 </div>
             </div>
 
-            <p class="paper__ref">{{ montarCodigo(orcamentoSelecionado()!) }}</p>
+            <p class="paper__ref">{{ montarCodigo(orcamento) }}</p>
 
-            <p>A/c: {{ orcamentoSelecionado()?.arquiteto }}.</p>
-            <p>Cliente {{ orcamentoSelecionado()?.cliente }}.</p>
+            <p>A/c: {{ orcamento.arquiteto || '—' }}.</p>
+            <p>Cliente {{ orcamento.cliente }}.</p>
+            <p>Projeto: {{ orcamento.nome_projeto }}.</p>
             <p>Conforme solicitação, estamos enviando orçamento para os seguintes itens:</p>
 
-            
-            @for (movel of orcamentoSelecionado()?.itens ?? []; track movel; let posicao = $index) {
-                <p>{{ posicao + 1 }}- {{ movel.descricao }}</p>
-                <p>
-                    Medidas: {{ formatarMetros(movel.med_largura) }} m de comprimento, 
-                    {{ formatarMetros(movel.med_altura) }} m de altura e 
-                    {{ formatarMetros(movel.med_profundidade) }} m de profundidade.<br>
-                    Quantidade: 1. Valor: {{ formatarReais(movel.valor) }}
-                </p>
+            @for (movel of orcamento.itens; track $index; let posicao = $index) {
+            <p>{{ posicao + 1 }}- {{ movel.descricao }}</p>
+            <p>
+                Medidas: {{ formatarMetros(movel.med_largura) }} m de comprimento,
+                {{ formatarMetros(movel.med_altura) }} m de altura e
+                {{ formatarMetros(movel.med_profundidade) }} m de profundidade.<br>
+                Quantidade: 1. Valor: {{ formatarReais(movel.valor) }}
+            </p>
             }
 
             <h3 class="paper__subtitle">CONDIÇÕES DO ORÇAMENTO</h3>
 
             <ul class="paper__list">
-                <li>Prazo: {{ orcamentoSelecionado()?.prazo_de_entrega }} após aprovação e conferência das medidas.</li>
+                <li>Prazo: {{ orcamento.prazo_de_entrega || 'A combinar' }} após aprovação e conferência das medidas.</li>
                 <li>1 ano de garantia, observadas as condições adequadas de uso.</li>
                 <li>
-                    Pagamento: 50% na contratação e 50% na entrega e instalação.<br>
+                    Pagamento: {{ orcamento.pagamento || '50% na contratação e 50% na entrega e instalação.' }}<br>
                     <span class="paper__cont">
-                        Entrada de {{ formatarReais(calcularMetade(orcamentoSelecionado()!)) }} e 
-                        saldo de {{ formatarReais(calcularMetade(orcamentoSelecionado()!)) }}.
+                        Entrada de {{ formatarReais(calcularMetade(orcamento)) }} e
+                        saldo de {{ formatarReais(calcularMetade(orcamento)) }}.
                     </span>
                 </li>
             </ul>
 
-            <p class="paper__total"><strong>•&nbsp; O valor total é de {{ formatarReais(orcamentoSelecionado()?.valor_total ?? 0) }}.</strong></p>
+            <p class="paper__total"><strong>•&nbsp; O valor total é de {{ formatarReais(orcamento.valor_total) }}.</strong></p>
 
             <p>Agradecemos a oportunidade e permanecemos à disposição para quaisquer esclarecimentos.</p>
             <p><strong>Atenciosamente,</strong></p>
@@ -84,10 +87,15 @@
                 <span>Homero Pereira (11) 96440-7514</span>
                 <span>Email: piatanorte.moveis&#64;hotmail.com</span>
             </address>
-
         </article>
 
-        <p class="preview__caption">Fim do documento · página 1 de 1 · {{ montarCodigo(orcamentoSelecionado()!) }}.pdf</p>
+        <p class="preview__caption">Fim do documento · página 1 de 1 · {{ montarCodigo(orcamento) }}.pdf</p>
     </section>
-
+    } @else {
+    @if (orcamentoSelecionado() === undefined) {
+    <p class="preview__message" role="alert">Orçamento não encontrado.</p>
+    } @else {
+    <p class="preview__message" role="status">Carregando orçamento selecionado...</p>
+    }
+    }
 </div>

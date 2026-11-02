@@ -76,12 +76,22 @@ button:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 28px;
-  font-size: 14px;
+  min-height: 38px;
+  margin-top: 20px;
+  padding: 0 15px;
+  border: 1px solid #e4e4e4;
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--black);
+  color: #252830;
+  transition: color .2s ease, border-color .2s ease, background-color .2s ease;
 }
-.back:hover { text-decoration: underline; text-underline-offset: 4px; }
+.back:hover {
+  border-color: #f2caca;
+  background: #fce8e8;
+  color: #a81c1c;
+}
 
 /* ---------- Título e ações ---------- */
 .heading {
@@ -111,6 +121,21 @@ button:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
   color: #111111;
 }
 .heading__sub { margin-top: 10px; font-size: 16px; color: #555a62; }
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #eeeeee;
+  color: #333333;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.status-badge--producao { background: #fce8e8; color: #a81c1c; }
+.status-badge--finalizado { background: #141414; color: #ffffff; }
 
 .actions { display: flex; align-items: flex-start; gap: 12px; }
 
@@ -159,6 +184,7 @@ button:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
   color: #8a8f98;
   text-align: center;
 }
+.preview__message { margin-top: 32px; text-align: center; }
 
 /* ---------- Folha do PDF (tudo em em: escala junto) ---------- */
 .paper {
@@ -270,4 +296,26 @@ button:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
+}
+
+@page { size: A4; margin: 0; }
+
+@media print {
+  :host,
+  .page { min-height: 0; background: #ffffff; }
+  .page { padding: 0; }
+  app-menu-top,
+  .back,
+  .heading,
+  .preview__caption { display: none; }
+  .preview { margin: 0; padding: 0; background: #ffffff; }
+  .paper {
+    width: 210mm;
+    max-width: none;
+    min-height: 297mm;
+    aspect-ratio: auto;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
 }

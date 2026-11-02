@@ -18,7 +18,26 @@ export interface Orcamento {
   arquiteto?: string;
   cliente: string;
   prazo_de_entrega?: string;
+  pagamento?: string;
   valor_total: number;
   status: string;
   itens: ItemOrcamento[];
+}
+
+export interface OrcamentoFormDraft {
+  cliente: string;
+  arquiteto: string;
+  projeto: string;
+  pagamento: string;
+  prazo: string;
+  itens: {
+    nome: string;
+    descricao: string;
+    comprimento: string;
+    altura: string;
+    profundidade: string;
+    madeira: string;
+    insumos: string;
+    maoDeObra: string;
+  }[];
 }

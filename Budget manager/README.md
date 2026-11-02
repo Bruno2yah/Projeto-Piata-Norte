@@ -2,6 +2,18 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.4.
 
+## Requisitos e instalação
+
+Este projeto usa npm (Angular), não Python. As dependências estão listadas em `package.json` e fixadas em `package-lock.json`.
+
+Requisitos: Node.js e npm. Para instalar as dependências de forma reproduzível, execute na pasta `Budget manager`:
+
+```bash
+npm ci --legacy-peer-deps
+```
+
+O `--legacy-peer-deps` é necessário porque `@angular/fire@21` declara compatibilidade com Angular 21 e TypeScript abaixo da versão 6, enquanto este projeto usa Angular 22 e TypeScript 6. A compilação de produção foi validada com essa instalação.
+
 ## Development server
 
 To start a local development server, run:
